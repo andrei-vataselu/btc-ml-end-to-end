@@ -1,0 +1,17 @@
+name: Branch Protection Check
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    check-protection:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: write
+        steps:
+            - name: Check if main branch is protected
+              run: |
+                  echo "Note: This is a reference-only repository with branch protection enabled."
+                  echo "No automatic actions will be taken."

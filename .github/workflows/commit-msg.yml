@@ -1,0 +1,28 @@
+name: Commit Message Check
+
+on:
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    lint-commit-messages:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: Check commit messages
+              run: |
+                  for commit in $(git rev-list origin/${{ github.base_ref }}..HEAD); do
+                    msg=$(git log --format=%B -n 1 $commit)
+                    if ! echo "$msg" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|chore|build|ci)(\(.+\))?: '; then
+                      echo "Invalid commit message: $msg"
+                      echo "Commit messages must follow the format: type(scope): description"
+                      exit 1
+                    fi
+                  done

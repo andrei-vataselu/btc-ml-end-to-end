@@ -1,0 +1,16 @@
+name: Auto Label Issues
+
+on:
+    issues:
+        types: [opened]
+
+jobs:
+    auto-label:
+        runs-on: ubuntu-latest
+        permissions:
+            issues: write
+        steps:
+            - name: Label issues
+              uses: actions/labeler@v4
+              with:
+                  repo-token: "${{ secrets.GITHUB_TOKEN }}"
